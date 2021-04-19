@@ -12,7 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SnakeModel;
+using CatersnakeModel;
+using System.Diagnostics;
 
 namespace CatersnakeApp
 {
@@ -31,26 +32,38 @@ namespace CatersnakeApp
 
         const int PlayingFieldWidth = 25;
         const int PlayingFieldHeight = 25;
+        const int SnakeStartX = 13;
+        const int SnakeStartY = 13;
 
-        Catersnake snake = new Catersnake(13, 13, PlayingFieldWidth, PlayingFieldHeight);
-        Ellipse circle;
+        GameControl _gameControl = new GameControl(SnakeStartX, SnakeStartY, PlayingFieldWidth, PlayingFieldHeight);
+        List<Ellipse> _graficLimbs;
 
         public MainWindow()
         {
             InitializeComponent();
-            circle = new Ellipse() { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen };
-            PlayingField.Children.Add(circle);
-
+            _graficLimbs = new List<Ellipse> { new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen } };
+            
+            PlayingField.Children.Add(_graficLimbs[0]);
         }
 
         private void PaintCater()
         {
-            PaintLimb(snake.limbs[0].X, snake.limbs[0].Y);
+            for (int i = 0; i < _graficLimbs.Count; i++)
+                PaintLimb(_gameControl.Cater.limbs[i], i);
         }
 
-        private void PaintLimb(int column, int row)
+        private void PaintLimb(Limb limb, int position)
         {
-            circle.Margin = new Thickness() { Left = GridMultiplier * column, Top= GridMultiplier * row };
+            _graficLimbs[position].Margin = new Thickness() { Left = GridMultiplier * limb.X, Top= GridMultiplier * limb.Y };
+        }
+
+        private void CaterGrow()
+        {
+            Ellipse newCircle = new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen };
+            _graficLimbs.Add(newCircle);
+            PlayingField.Children.Add(newCircle);
+            _gameControl.CaterGrow();
+            Debug.WriteLine(_graficLimbs.Count);
         }
 
         private void MenuQuit_Click(object sender, RoutedEventArgs e)
@@ -66,10 +79,6 @@ namespace CatersnakeApp
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             PaintCater();
-            /*snake.Grow(Direction.Left);
-            snake.Grow(Direction.Down);
-            snake.Grow(Direction.Right);
-            snake.Grow(Direction.Right);*/
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -77,16 +86,19 @@ namespace CatersnakeApp
             switch (e.Key)
             {
                 case Key.Left:
-                    snake.Move(Direction.Left);
+                    _gameControl.ChangeDirection(Direction.Left);
                     break;
                 case Key.Up:
-                    snake.Move(Direction.Up);
+                    _gameControl.ChangeDirection(Direction.Up);
                     break;
                 case Key.Right:
-                    snake.Move(Direction.Right);
+                    _gameControl.ChangeDirection(Direction.Right);
                     break;
                 case Key.Down:
-                    snake.Move(Direction.Down);
+                    _gameControl.ChangeDirection(Direction.Down);
+                    break;
+                case Key.Space:
+                    CaterGrow();
                     break;
             }
             PaintCater();
