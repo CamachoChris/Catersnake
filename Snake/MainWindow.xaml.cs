@@ -35,8 +35,9 @@ namespace CatersnakeApp
         const int SnakeStartX = 13;
         const int SnakeStartY = 13;
 
-        GameControl _gameControl = new GameControl(SnakeStartX, SnakeStartY, PlayingFieldWidth, PlayingFieldHeight);
         List<Ellipse> _graficLimbs;
+        GameControl _gameControl = new GameControl(SnakeStartX, SnakeStartY, PlayingFieldWidth, PlayingFieldHeight);
+        
 
         public MainWindow()
         {
@@ -48,10 +49,10 @@ namespace CatersnakeApp
 
         private void GameControl_Tick(object sender, EventArgs e)
         {
-            PaintCater();
+            AssembleCater();
         }
 
-        private void PaintCater()
+        private void AssembleCater()
         {
             for (int i = 0; i < _graficLimbs.Count; i++)
                 PaintLimb(_gameControl.Cater.limbs[i], i);
@@ -62,15 +63,14 @@ namespace CatersnakeApp
             this.Dispatcher.Invoke(() =>
             {
                 _graficLimbs[position].Margin = new Thickness() { Left = GridMultiplier * limb.X, Top = GridMultiplier * limb.Y };
-            });            
+            });                
         }
 
-        private void CaterGrow()
+        private void CaterGraphicGrow()
         {
-            Ellipse newCircle = new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen };
-            _graficLimbs.Add(newCircle);
-            PlayingField.Children.Add(newCircle);
-            _gameControl.CaterGrow();
+            
+            Ellipse nextGraphicalLimb = new Ellipse() { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen };
+            _graficLimbs.Add(nextGraphicalLimb);
             Debug.WriteLine(_graficLimbs.Count);
         }
 
@@ -86,7 +86,7 @@ namespace CatersnakeApp
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            PaintCater();
+            AssembleCater();
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -107,7 +107,8 @@ namespace CatersnakeApp
                     _gameControl.ChangeDirection(Direction.Down);
                     break;
                 case Key.Space:
-                    CaterGrow();
+                    _gameControl.CaterGrow();
+                    CaterGraphicGrow();
                     break;
             }
         }
