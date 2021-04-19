@@ -42,8 +42,13 @@ namespace CatersnakeApp
         {
             InitializeComponent();
             _graficLimbs = new List<Ellipse> { new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen } };
-            
+            _gameControl.Tick += GameControl_Tick;
             PlayingField.Children.Add(_graficLimbs[0]);
+        }
+
+        private void GameControl_Tick(object sender, EventArgs e)
+        {
+            PaintCater();
         }
 
         private void PaintCater()
@@ -54,7 +59,10 @@ namespace CatersnakeApp
 
         private void PaintLimb(Limb limb, int position)
         {
-            _graficLimbs[position].Margin = new Thickness() { Left = GridMultiplier * limb.X, Top= GridMultiplier * limb.Y };
+            this.Dispatcher.Invoke(() =>
+            {
+                _graficLimbs[position].Margin = new Thickness() { Left = GridMultiplier * limb.X, Top = GridMultiplier * limb.Y };
+            });            
         }
 
         private void CaterGrow()
@@ -83,6 +91,7 @@ namespace CatersnakeApp
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
+
             switch (e.Key)
             {
                 case Key.Left:
@@ -101,7 +110,11 @@ namespace CatersnakeApp
                     CaterGrow();
                     break;
             }
-            PaintCater();
+        }
+
+        private void StartGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            _gameControl.SwitchCounter();
         }
     }
 }

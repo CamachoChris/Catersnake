@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,12 +9,32 @@ namespace CatersnakeModel
     {
         public Catersnake Cater;
 
+        private Timer _timer = new Timer();
+        public event EventHandler Tick;
+
         private Direction _direction;
 
         public GameControl(int caterStartX, int caterStartY, int maxFieldX, int maxFieldY)
         {
             Cater = new Catersnake(caterStartX, caterStartY, maxFieldX, maxFieldY);
             _direction = Direction.Right;
+            _timer.Elapsed += Timer_Elapsed;
+            _timer.Interval = 1000;
+        }
+
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Cater.Move(_direction);
+            if (Tick != null)
+                Tick(this, EventArgs.Empty);
+        }
+
+        public void SwitchCounter()
+        {
+            /*if (_timer.Enabled)
+                _timer.Stop();
+            else*/
+                _timer.Start();
         }
 
         public void CaterGrow()
@@ -42,7 +63,6 @@ namespace CatersnakeModel
                         _direction = Direction.Down;
                     break;
             }
-            Cater.Move(_direction);
         }
 
         public Direction GetDirection()
