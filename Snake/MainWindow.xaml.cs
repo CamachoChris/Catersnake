@@ -17,9 +17,6 @@ using System.Diagnostics;
 
 namespace CatersnakeApp
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         const string appName= "Catersnake";
@@ -44,7 +41,13 @@ namespace CatersnakeApp
             InitializeComponent();
             _graficLimbs = new List<Ellipse> { new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen } };
             _gameControl.Tick += GameControl_Tick;
+            _gameControl.LetHimGrow += GameControl_LetHimGrow;
             PlayingField.Children.Add(_graficLimbs[0]);
+        }
+
+        private void GameControl_LetHimGrow(object sender, EventArgs e)
+        {
+            CaterGraphicGrow();
         }
 
         private void GameControl_Tick(object sender, EventArgs e)
@@ -55,7 +58,7 @@ namespace CatersnakeApp
         private void AssembleCater()
         {
             for (int i = 0; i < _graficLimbs.Count; i++)
-                PaintLimb(_gameControl.Cater.limbs[i], i);
+                PaintLimb(_gameControl.Cater.Limbs[i], i);
         }
 
         private void PaintLimb(Limb limb, int position)
@@ -68,10 +71,14 @@ namespace CatersnakeApp
 
         private void CaterGraphicGrow()
         {
-            
-            Ellipse nextGraphicalLimb = new Ellipse() { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen };
-            _graficLimbs.Add(nextGraphicalLimb);
-            Debug.WriteLine(_graficLimbs.Count);
+            this.Dispatcher.Invoke(() =>
+            {
+                Ellipse nextGraphicalLimb = new Ellipse() { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen };
+                _graficLimbs.Add(nextGraphicalLimb);
+                AssembleCater();
+                PlayingField.Children.Add(nextGraphicalLimb);
+            });
+
         }
 
         private void MenuQuit_Click(object sender, RoutedEventArgs e)
@@ -108,7 +115,6 @@ namespace CatersnakeApp
                     break;
                 case Key.Space:
                     _gameControl.CaterGrow();
-                    CaterGraphicGrow();
                     break;
             }
         }

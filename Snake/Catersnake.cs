@@ -21,12 +21,12 @@ namespace CatersnakeModel
 
     public class Catersnake
     {
-        public List<Limb> limbs;
+        public List<Limb> Limbs;
         private readonly int _maxFieldX, _maxFieldY;
 
         public Catersnake(int caterStartX, int caterStartY, int maxFieldX, int maxFieldY)
         {
-            limbs = new List<Limb> { new Limb() { X = caterStartX, Y = caterStartY } };
+            Limbs = new List<Limb> { new Limb() { X = caterStartX, Y = caterStartY } };
             _maxFieldX = maxFieldX;
             _maxFieldY = maxFieldY;
         }
@@ -34,7 +34,7 @@ namespace CatersnakeModel
         public void Move(Direction direction)
         {
             SetNextHead(direction);
-            limbs.RemoveAt(limbs.Count - 1);
+            Limbs.RemoveAt(Limbs.Count - 1);
         }
 
         public void Grow(Direction direction)
@@ -44,7 +44,7 @@ namespace CatersnakeModel
 
         private void SetNextHead(Direction direction)
         {
-            Limb newHead = new Limb() { X = limbs[0].X, Y = limbs[0].Y};
+            Limb newHead = new Limb() { X = Limbs[0].X, Y = Limbs[0].Y};
             switch (direction)
             {
                 case Direction.Left:
@@ -72,15 +72,15 @@ namespace CatersnakeModel
                         newHead.Y++;
                     break;
             }
-            limbs.Insert(0, newHead);
+            Limbs.Insert(0, newHead);
         }
 
         public void ShowCatersnake(string txt)
         {
             Debug.WriteLine(txt);
-            for (int i = 0; i < limbs.Count; i++)
+            for (int i = 0; i < Limbs.Count; i++)
             {
-                Debug.WriteLine($"{i}. X={limbs[i].X}, Y={limbs[i].Y}");
+                Debug.WriteLine($"{i}. X={Limbs[i].X}, Y={Limbs[i].Y}");
             }
         }
     }
