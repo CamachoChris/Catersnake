@@ -39,7 +39,7 @@ namespace CatersnakeApp
         public MainWindow()
         {
             InitializeComponent();
-            _graficLimbs = new List<Ellipse> { new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen } };
+            _graficLimbs = new List<Ellipse> { new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkOliveGreen } };
             _gameControl.Tick += GameControl_Tick;
             _gameControl.LetHimGrow += GameControl_LetHimGrow;
             PlayingField.Children.Add(_graficLimbs[0]);
@@ -57,14 +57,26 @@ namespace CatersnakeApp
 
         private void AssembleCater()
         {
+            if (_graficLimbs.Count > 1)
+            {
+                Ellipse tmp = _graficLimbs[_graficLimbs.Count - 1];
+                _graficLimbs.Insert(0, tmp);
+                _graficLimbs.RemoveAt(_graficLimbs.Count - 1);
+            }
             for (int i = 0; i < _graficLimbs.Count; i++)
+            {
                 PaintLimb(_gameControl.Cater.Limbs[i], i);
+            }
         }
 
         private void PaintLimb(Limb limb, int position)
         {
             this.Dispatcher.Invoke(() =>
             {
+                if (position == 0)
+                    _graficLimbs[0].Fill = Brushes.DarkGreen;
+                if (position == 1)
+                    _graficLimbs[1].Fill = Brushes.DarkOliveGreen;
                 _graficLimbs[position].Margin = new Thickness() { Left = GridMultiplier * limb.X, Top = GridMultiplier * limb.Y };
             });                
         }
@@ -74,7 +86,8 @@ namespace CatersnakeApp
             this.Dispatcher.Invoke(() =>
             {
                 Ellipse nextGraphicalLimb = new Ellipse() { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen };
-                _graficLimbs.Add(nextGraphicalLimb);
+                _graficLimbs[0].Fill = Brushes.DarkOliveGreen;
+                _graficLimbs.Insert(0, nextGraphicalLimb);
                 AssembleCater();
                 PlayingField.Children.Add(nextGraphicalLimb);
             });

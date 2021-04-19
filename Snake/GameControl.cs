@@ -22,7 +22,7 @@ namespace CatersnakeModel
             _direction = Direction.Right;
             _needsToGrow = false;
             _timer.Elapsed += Timer_Elapsed;
-            _timer.Interval = 500;
+            _timer.Interval = 100;
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
