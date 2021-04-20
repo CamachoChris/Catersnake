@@ -42,6 +42,27 @@ namespace CatersnakeModel
             SetNextHead(direction);
         }
 
+        public bool IsThereTheSnake(int x, int y)
+        {
+            for (int i = 0; i < Limbs.Count; i++)
+                if (x == Limbs[i].X && y == Limbs[i].Y)
+                    return true;
+            return false;
+        }
+
+        public bool DidCollide()
+        {
+            if (Limbs.Count > 4)
+            {
+                for (int i = 5; i < Limbs.Count; i++)
+                    if (Limbs[0].X == Limbs[i].X && Limbs[0].Y == Limbs[i].Y)
+                        return true;
+                return false;
+            }
+            else
+                return false;
+        }
+
         private void SetNextHead(Direction direction)
         {
             Limb newHead = new Limb() { X = Limbs[0].X, Y = Limbs[0].Y};

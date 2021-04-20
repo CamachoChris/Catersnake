@@ -34,7 +34,9 @@ namespace CatersnakeApp
 
         List<Ellipse> _graficLimbs;
         GameControl _gameControl = new GameControl(SnakeStartX, SnakeStartY, PlayingFieldWidth, PlayingFieldHeight);
-        
+        Ellipse Apple;
+
+        bool GameStarted;
 
         public MainWindow()
         {
@@ -43,11 +45,15 @@ namespace CatersnakeApp
             _gameControl.Tick += GameControl_Tick;
             _gameControl.LetHimGrow += GameControl_LetHimGrow;
             PlayingField.Children.Add(_graficLimbs[0]);
+            Apple = new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.Red };
+            PlayingField.Children.Add(Apple);
+            GameStarted = false;
         }
 
         private void GameControl_LetHimGrow(object sender, EventArgs e)
         {
             CaterGraphicGrow();
+            PaintApple();
         }
 
         private void GameControl_Tick(object sender, EventArgs e)
@@ -99,6 +105,16 @@ namespace CatersnakeApp
             Application.Current.Shutdown();
         }
 
+        public void PaintApple()
+        {
+            Point applePoint = _gameControl.PlaceApple();
+            this.Dispatcher.Invoke(() =>
+            {
+                Apple.Margin = new Thickness() { Left = GridMultiplier * applePoint.X, Top = GridMultiplier * applePoint.Y };
+            });
+
+        }
+
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(this, $"{appName}\n{version}\n{timeOfDevelopment} {developer}.\nNo rights reserved...", $"About {appName}");
@@ -107,6 +123,7 @@ namespace CatersnakeApp
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             AssembleCater();
+            PaintApple();
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -126,15 +143,16 @@ namespace CatersnakeApp
                 case Key.Down:
                     _gameControl.ChangeDirection(Direction.Down);
                     break;
-                case Key.Space:
-                    _gameControl.CaterGrow();
-                    break;
             }
         }
 
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            _gameControl.SwitchCounter();
+            if (!GameStarted)
+            {
+                _gameControl.StartCounter();
+                GameStarted = true;
+            }
         }
     }
 }

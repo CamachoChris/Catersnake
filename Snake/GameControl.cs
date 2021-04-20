@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Timers;
 using System.Collections.Generic;
 using System.Text;
@@ -8,31 +9,57 @@ namespace CatersnakeModel
     class GameControl
     {
         public Catersnake Cater;
+        public Point Apple = new Point();
 
         private Timer _timer = new Timer();
         public event EventHandler Tick;
         public event EventHandler LetHimGrow;
 
         private Direction _direction;
-        private bool _needsToGrow;
+
+        Random rnd = new Random();
+
+        private int _maxFieldX, _maxFieldY;
 
         public GameControl(int caterStartX, int caterStartY, int maxFieldX, int maxFieldY)
         {
             Cater = new Catersnake(caterStartX, caterStartY, maxFieldX, maxFieldY);
+            _maxFieldX = maxFieldX;
+            _maxFieldY = maxFieldY;
             _direction = Direction.Right;
-            _needsToGrow = false;
             _timer.Elapsed += Timer_Elapsed;
             _timer.Interval = 100;
         }
 
+        public bool SnakeGotApple()
+        {
+            if (Cater.Limbs[0].X == Apple.X && Cater.Limbs[0].Y == Apple.Y)
+                return true;
+            return false;
+        }
+
+        public Point PlaceApple()
+        {
+            int rndX, rndY;
+            bool isSnake;
+            do
+            {
+                rndX = rnd.Next(_maxFieldX);
+                rndY = rnd.Next(_maxFieldY);
+                isSnake = (Cater.IsThereTheSnake(rndX, rndY));
+            }
+            while (isSnake);
+            Apple = new Point(rndX, rndY);
+            return Apple;
+        }
+
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (_needsToGrow)
+            if (SnakeGotApple())
             {
                 Cater.Grow(_direction);
                 if (LetHimGrow != null)
                     LetHimGrow(this, EventArgs.Empty);
-                _needsToGrow = false;
             }
             else
             {
@@ -40,19 +67,13 @@ namespace CatersnakeModel
                 if (Tick != null)
                     Tick(this, EventArgs.Empty);
             }
-        }
-
-        public void SwitchCounter()
-        {
-            if (_timer.Enabled)
+            if (Cater.DidCollide())
                 _timer.Stop();
-            else
-                _timer.Start();
         }
 
-        public void CaterGrow()
+        public void StartCounter()
         {
-            _needsToGrow = true;            
+            _timer.Start();
         }
 
         public void ChangeDirection(Direction direction)
