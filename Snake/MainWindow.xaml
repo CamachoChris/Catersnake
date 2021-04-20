@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CatersnakeApp"
         mc:Ignorable="d"
-        Title="Catersnake" Height="630" Width="700" Background="SaddleBrown" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
+        Title="Catersnake" Height="630" Width="700" Background="SaddleBrown" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" KeyDown="Window_KeyDown" Closing="Window_Closing" Closed="Window_Closed">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -24,6 +24,12 @@
                 <ColumnDefinition Width="504"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            <StackPanel>
+                <Label Content="Slow" HorizontalAlignment="Center" Foreground="BurlyWood" Margin="0,100,0,0"/>
+                <Slider Orientation="Vertical" x:Name="slider" Focusable="False" Maximum="400" Minimum="20" Value="150" HorizontalAlignment="Center" VerticalAlignment="Center" Height="120"/>
+                <Label Content="Fast" HorizontalAlignment="Center" Foreground="BurlyWood"/>
+
+            </StackPanel>
             <StackPanel Grid.Column="1">
                 <Canvas x:Name="PlayingField" Background="BurlyWood" Height="504" Width="504" Margin="0,10,0,0"/>
                 <Button Focusable="False" Background="BurlyWood" x:Name="StartGameButton" Height="30" Width="100" Content="New Game" Margin="0,10,0,10" Click="StartGameButton_Click"/>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,32 +34,13 @@ namespace CatersnakeApp
         const int SnakeStartY = 13;
 
         List<Ellipse> _graficLimbs;
-        GameControl _gameControl = new GameControl(SnakeStartX, SnakeStartY, PlayingFieldWidth, PlayingFieldHeight);
-        Ellipse Apple;
-
-        bool GameStarted;
+        GameControl _gameControl;
+        Ellipse _apple;
 
         public MainWindow()
         {
             InitializeComponent();
-            _graficLimbs = new List<Ellipse> { new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkOliveGreen } };
-            _gameControl.Tick += GameControl_Tick;
-            _gameControl.LetHimGrow += GameControl_LetHimGrow;
-            PlayingField.Children.Add(_graficLimbs[0]);
-            Apple = new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.Red };
-            PlayingField.Children.Add(Apple);
-            GameStarted = false;
-        }
-
-        private void GameControl_LetHimGrow(object sender, EventArgs e)
-        {
-            CaterGraphicGrow();
-            PaintApple();
-        }
-
-        private void GameControl_Tick(object sender, EventArgs e)
-        {
-            AssembleCater();
+            Dispatcher.ShutdownFinished += Dispatcher_ShutdownFinished;
         }
 
         private void AssembleCater()
@@ -66,16 +48,16 @@ namespace CatersnakeApp
             if (_graficLimbs.Count > 1)
             {
                 Ellipse tmp = _graficLimbs[_graficLimbs.Count - 1];
-                _graficLimbs.Insert(0, tmp);
+                _graficLimbs.Insert(1, tmp);
                 _graficLimbs.RemoveAt(_graficLimbs.Count - 1);
             }
             for (int i = 0; i < _graficLimbs.Count; i++)
             {
-                PaintLimb(_gameControl.Cater.Limbs[i], i);
+                LimbView(_gameControl.Cater.Limbs[i], i);
             }
         }
 
-        private void PaintLimb(Limb limb, int position)
+        private void LimbView(Point limb, int position)
         {
             this.Dispatcher.Invoke(() =>
             {
@@ -84,7 +66,12 @@ namespace CatersnakeApp
                 if (position == 1)
                     _graficLimbs[1].Fill = Brushes.DarkOliveGreen;
                 _graficLimbs[position].Margin = new Thickness() { Left = GridMultiplier * limb.X, Top = GridMultiplier * limb.Y };
-            });                
+            });
+        }
+
+        public void AppleView()
+        {
+            _apple.Margin = new Thickness() { Left = GridMultiplier * _gameControl.Apple.X, Top = GridMultiplier * _gameControl.Apple.Y };
         }
 
         private void CaterGraphicGrow()
@@ -97,62 +84,6 @@ namespace CatersnakeApp
                 AssembleCater();
                 PlayingField.Children.Add(nextGraphicalLimb);
             });
-
-        }
-
-        private void MenuQuit_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
-
-        public void PaintApple()
-        {
-            Point applePoint = _gameControl.PlaceApple();
-            this.Dispatcher.Invoke(() =>
-            {
-                Apple.Margin = new Thickness() { Left = GridMultiplier * applePoint.X, Top = GridMultiplier * applePoint.Y };
-            });
-
-        }
-
-        private void MenuAbout_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show(this, $"{appName}\n{version}\n{timeOfDevelopment} {developer}.\nNo rights reserved...", $"About {appName}");
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            AssembleCater();
-            PaintApple();
-        }
-
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-
-            switch (e.Key)
-            {
-                case Key.Left:
-                    _gameControl.ChangeDirection(Direction.Left);
-                    break;
-                case Key.Up:
-                    _gameControl.ChangeDirection(Direction.Up);
-                    break;
-                case Key.Right:
-                    _gameControl.ChangeDirection(Direction.Right);
-                    break;
-                case Key.Down:
-                    _gameControl.ChangeDirection(Direction.Down);
-                    break;
-            }
-        }
-
-        private void StartGameButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!GameStarted)
-            {
-                _gameControl.StartCounter();
-                GameStarted = true;
-            }
         }
     }
 }

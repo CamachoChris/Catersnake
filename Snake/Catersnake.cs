@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
@@ -6,11 +7,6 @@ using System.Diagnostics;
 namespace CatersnakeModel
 
 {
-    public class Limb
-    {
-        public int X;
-        public int Y;
-    }
     public enum Direction
     {
         Left,
@@ -21,12 +17,12 @@ namespace CatersnakeModel
 
     public class Catersnake
     {
-        public List<Limb> Limbs;
+        public List<Point> Limbs;
         private readonly int _maxFieldX, _maxFieldY;
 
         public Catersnake(int caterStartX, int caterStartY, int maxFieldX, int maxFieldY)
         {
-            Limbs = new List<Limb> { new Limb() { X = caterStartX, Y = caterStartY } };
+            Limbs = new List<Point> { new Point() { X = caterStartX, Y = caterStartY } };
             _maxFieldX = maxFieldX;
             _maxFieldY = maxFieldY;
         }
@@ -54,7 +50,7 @@ namespace CatersnakeModel
         {
             if (Limbs.Count > 4)
             {
-                for (int i = 5; i < Limbs.Count; i++)
+                for (int i = 4; i < Limbs.Count; i++)
                     if (Limbs[0].X == Limbs[i].X && Limbs[0].Y == Limbs[i].Y)
                         return true;
                 return false;
@@ -65,7 +61,7 @@ namespace CatersnakeModel
 
         private void SetNextHead(Direction direction)
         {
-            Limb newHead = new Limb() { X = Limbs[0].X, Y = Limbs[0].Y};
+            Point newHead = new Point() { X = Limbs[0].X, Y = Limbs[0].Y};
             switch (direction)
             {
                 case Direction.Left:
