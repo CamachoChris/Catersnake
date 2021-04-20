@@ -12,10 +12,9 @@ namespace CatersnakeModel
         public Point Apple = new Point();
 
         public Timer Timer = new Timer();
+
         public event EventHandler Tick;
         public event EventHandler LetHimGrow;
-
-        public int TimerSlider; //Fast = 42 --- Normal = 130 --- Slow = 400
 
         private Direction _direction = Direction.Left;
         private Direction _favoredDirection = Direction.Left;
@@ -38,7 +37,7 @@ namespace CatersnakeModel
         {
             _direction = _favoredDirection;
 
-            if (SnakeGotApple())
+            if (HasCaterApple())
             {
                 PlaceApple();
 
@@ -60,37 +59,34 @@ namespace CatersnakeModel
                 Timer.Stop();
         }
 
-        public void StartCounter()
+        public void StartTimer(int interval)
         {
-            Timer.Interval = TimerSlider;
+            Timer.Interval = interval;
             Timer.Start();
         }
 
-        public void StopCounter()
-        {
-            Timer.Stop();
-        }
-
-        public bool SnakeGotApple()
+        public bool HasCaterApple()
         {
             if (Cater.Limbs[0].X == Apple.X && Cater.Limbs[0].Y == Apple.Y)
                 return true;
             return false;
         }
 
-        public Point PlaceApple()
+        public void PlaceApple()
         {
             int rndX, rndY;
-            bool isSnake;
+            bool isCater;
+
             do
             {
                 rndX = _rnd.Next(_maxFieldX);
                 rndY = _rnd.Next(_maxFieldY);
-                isSnake = (Cater.IsThereTheSnake(rndX, rndY));
+                isCater = (Cater.IsThereTheCater(rndX, rndY));
             }
-            while (isSnake);
-            Apple = new Point(rndX, rndY);
-            return Apple;
+            while (isCater);
+
+            Apple.X = rndX;
+            Apple.Y = rndY;
         }
 
         public void ChangeDirection(Direction direction)

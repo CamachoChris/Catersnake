@@ -38,7 +38,7 @@ namespace CatersnakeModel
             SetNextHead(direction);
         }
 
-        public bool IsThereTheSnake(int x, int y)
+        public bool IsThereTheCater(int x, int y)
         {
             for (int i = 0; i < Limbs.Count; i++)
                 if (x == Limbs[i].X && y == Limbs[i].Y)

@@ -26,30 +26,42 @@ namespace CatersnakeApp
             InitModel();
             InitView();
             CreateSnakeForPreview();
-            AppleView();
+            PositionAppleView();
         }
 
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            ResetModel();
-            ResetView();
+            ResetGame();
             InitGame();
-            _gameControl.TimerSlider = (int)slider.Value;
-            _gameControl.StartCounter();
+            _gameControl.StartTimer((int)slider.Value);
         }
 
+        /// <summary>
+        /// Using Dispatcher.Invoke
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GameControl_Tick(object sender, EventArgs e)
         {
-            AssembleCater();
+            this.Dispatcher.Invoke(() =>
+            {
+                CaterIsMovingView();
+            });
         }
 
+        /// <summary>
+        /// Using Dispatcher.Invoke
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GameControl_LetHimGrow(object sender, EventArgs e)
         {
-            CaterGraphicGrow();
 
             this.Dispatcher.Invoke(() =>
             {
-                AppleView();
+                GrowHeadView();
+                CaterIsMovingView();
+                PositionAppleView();
             });
         }
 
@@ -74,7 +86,7 @@ namespace CatersnakeApp
 
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(this, $"{appName}\n{version}\n{timeOfDevelopment} {developer}.\nNo rights reserved...", $"About {appName}");
+            MessageBox.Show(this, $"{AppName}\n{Version}\n{TimeOfDevelopment} {Developer}.\nNo rights reserved...", $"About {AppName}");
         }
 
         private void MenuQuit_Click(object sender, RoutedEventArgs e)
@@ -94,8 +106,7 @@ namespace CatersnakeApp
 
         private void Dispatcher_ShutdownFinished(object sender, EventArgs e)
         {
-            ResetModel();
-            ResetView();
+            ResetGame();
             Application.Current.Shutdown();
         }
     }

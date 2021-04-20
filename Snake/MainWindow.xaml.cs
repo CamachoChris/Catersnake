@@ -20,10 +20,10 @@ namespace CatersnakeApp
 {
     public partial class MainWindow : Window
     {
-        const string appName= "Catersnake";
-        const string version = "0.0.0";
-        const string developer = "Grimakar";
-        const string timeOfDevelopment = "April 2021";
+        const string AppName= "Catersnake";
+        const string Version = "0.1.0";
+        const string Developer = "Grimakar";
+        const string TimeOfDevelopment = "April 2021";
 
         const int CaterThickness = 24;
         const int GridMultiplier = 20;
@@ -33,9 +33,9 @@ namespace CatersnakeApp
         const int SnakeStartX = 13;
         const int SnakeStartY = 13;
 
-        List<Ellipse> _graficLimbs;
-        GameControl _gameControl;
-        Ellipse _apple;
+        private List<Ellipse> _limbsView;
+        private GameControl _gameControl;
+        private Ellipse _apple;
 
         public MainWindow()
         {
@@ -43,47 +43,45 @@ namespace CatersnakeApp
             Dispatcher.ShutdownFinished += Dispatcher_ShutdownFinished;
         }
 
-        private void AssembleCater()
+        private void MoveTailToNeckView()
         {
-            if (_graficLimbs.Count > 1)
+            if (_limbsView.Count > 1)
             {
-                Ellipse tmp = _graficLimbs[_graficLimbs.Count - 1];
-                _graficLimbs.Insert(1, tmp);
-                _graficLimbs.RemoveAt(_graficLimbs.Count - 1);
-            }
-            for (int i = 0; i < _graficLimbs.Count; i++)
-            {
-                LimbView(_gameControl.Cater.Limbs[i], i);
+                Ellipse tmp = _limbsView[_limbsView.Count - 1];
+                _limbsView.Insert(1, tmp);
+                _limbsView.RemoveAt(_limbsView.Count - 1);
             }
         }
 
-        private void LimbView(Point limb, int position)
+        private void PositionCaterView()
         {
-            this.Dispatcher.Invoke(() =>
+            for (int i = 0; i < _limbsView.Count; i++)
             {
-                if (position == 0)
-                    _graficLimbs[0].Fill = Brushes.DarkGreen;
-                if (position == 1)
-                    _graficLimbs[1].Fill = Brushes.DarkOliveGreen;
-                _graficLimbs[position].Margin = new Thickness() { Left = GridMultiplier * limb.X, Top = GridMultiplier * limb.Y };
-            });
+                _limbsView[i].Margin = new Thickness() 
+                {
+                    Left = GridMultiplier * _gameControl.Cater.Limbs[i].X,
+                    Top = GridMultiplier * _gameControl.Cater.Limbs[i].Y 
+                };
+            }
         }
 
-        public void AppleView()
+        private void CaterIsMovingView()
+        {
+            MoveTailToNeckView();
+            PositionCaterView();
+        }
+
+        private void GrowHeadView()
+        {
+            Ellipse nextLimb = new Ellipse() { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen };
+            _limbsView[0].Fill = Brushes.DarkOliveGreen;
+            _limbsView.Insert(0, nextLimb);
+            PlayingField.Children.Add(nextLimb);
+        }
+
+        private void PositionAppleView()
         {
             _apple.Margin = new Thickness() { Left = GridMultiplier * _gameControl.Apple.X, Top = GridMultiplier * _gameControl.Apple.Y };
-        }
-
-        private void CaterGraphicGrow()
-        {
-            this.Dispatcher.Invoke(() =>
-            {
-                Ellipse nextGraphicalLimb = new Ellipse() { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen };
-                _graficLimbs[0].Fill = Brushes.DarkOliveGreen;
-                _graficLimbs.Insert(0, nextGraphicalLimb);
-                AssembleCater();
-                PlayingField.Children.Add(nextGraphicalLimb);
-            });
         }
     }
 }

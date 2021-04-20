@@ -25,8 +25,14 @@ namespace CatersnakeApp
         {
             InitModel();
             InitView();
-            AssembleCater();
-            AppleView();
+            CaterIsMovingView();
+            PositionAppleView();
+        }
+
+        private void ResetGame()
+        {
+            ResetModel();
+            ResetView();
         }
 
         private void InitModel()
@@ -38,11 +44,11 @@ namespace CatersnakeApp
 
         private void InitView()
         {
-            _graficLimbs = new List<Ellipse> { new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkOliveGreen } };
-            PlayingField.Children.Add(_graficLimbs[0]);
-
             _apple = new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.Red };
             PlayingField.Children.Add(_apple);
+
+            _limbsView = new List<Ellipse> { new Ellipse { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen } };
+            PlayingField.Children.Add(_limbsView[0]);
         }
 
         private void ResetModel()
@@ -58,7 +64,7 @@ namespace CatersnakeApp
         private void ResetView()
         {
             PlayingField.Children.Clear();
-            _graficLimbs = null;
+            _limbsView = null;
             _apple = null;
         }
 
@@ -74,7 +80,10 @@ namespace CatersnakeApp
             for (int i = 0; i < 5; i++)
                 _gameControl.Cater.Grow(Direction.Left);
             for (int i = 0; i < _gameControl.Cater.Limbs.Count - 1; i++)
-                CaterGraphicGrow();
+            {
+                GrowHeadView();
+                CaterIsMovingView();
+            }
             _gameControl.Apple.X = 9;
             _gameControl.Apple.Y = 10;
         }
