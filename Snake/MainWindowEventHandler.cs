@@ -34,6 +34,8 @@ namespace CatersnakeApp
             ResetGame();
             InitGame();
             _gameControl.StartTimer((int)slider.Value);
+
+            EatenTextBlock.Text = string.Format("0");
         }
 
         /// <summary>
@@ -56,12 +58,13 @@ namespace CatersnakeApp
         /// <param name="e"></param>
         private void GameControl_LetHimGrow(object sender, EventArgs e)
         {
-
             this.Dispatcher.Invoke(() =>
             {
                 GrowHeadView();
                 CaterIsMovingView();
                 PositionAppleView();
+
+                EatenTextBlock.Text = string.Format($"{(int.Parse(EatenTextBlock.Text)+1)}");
             });
         }
 
