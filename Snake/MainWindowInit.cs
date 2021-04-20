@@ -40,6 +40,7 @@ namespace CatersnakeApp
             _gameControl = new GameControl(SnakeStartX, SnakeStartY, PlayingFieldWidth, PlayingFieldHeight);
             _gameControl.Tick += GameControl_Tick;
             _gameControl.LetHimGrow += GameControl_LetHimGrow;
+            _gameControl.SelfEaten += GameControl_SelfEaten;
         }
 
         private void InitView()
@@ -57,6 +58,7 @@ namespace CatersnakeApp
             _gameControl.Timer.Close();
             _gameControl.Tick -= GameControl_Tick;
             _gameControl.LetHimGrow -= GameControl_LetHimGrow;
+            _gameControl.SelfEaten -= GameControl_SelfEaten;
 
             _gameControl = null;
         }

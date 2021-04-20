@@ -37,6 +37,8 @@ namespace CatersnakeApp
         private GameControl _gameControl;
         private Ellipse _apple;
 
+        private bool _caterMoves = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -47,8 +49,8 @@ namespace CatersnakeApp
         {
             if (_limbsView.Count > 1)
             {
-                Ellipse tmp = _limbsView[_limbsView.Count - 1];
-                _limbsView.Insert(1, tmp);
+                Ellipse tailIsNeck = _limbsView[_limbsView.Count - 1];
+                _limbsView.Insert(1, tailIsNeck);
                 _limbsView.RemoveAt(_limbsView.Count - 1);
             }
         }
@@ -73,10 +75,10 @@ namespace CatersnakeApp
 
         private void GrowHeadView()
         {
-            Ellipse nextLimb = new Ellipse() { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen };
+            Ellipse grownHead = new Ellipse() { Height = CaterThickness, Width = CaterThickness, Fill = Brushes.DarkGreen };
             _limbsView[0].Fill = Brushes.DarkOliveGreen;
-            _limbsView.Insert(0, nextLimb);
-            PlayingField.Children.Add(nextLimb);
+            _limbsView.Insert(0, grownHead);
+            PlayingField.Children.Add(grownHead);
         }
 
         private void PositionAppleView()

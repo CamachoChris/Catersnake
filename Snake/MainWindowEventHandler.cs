@@ -36,6 +36,7 @@ namespace CatersnakeApp
             _gameControl.StartTimer((int)slider.Value);
 
             EatenTextBlock.Text = string.Format("0");
+            _caterMoves = true;
         }
 
         /// <summary>
@@ -45,6 +46,8 @@ namespace CatersnakeApp
         /// <param name="e"></param>
         private void GameControl_Tick(object sender, EventArgs e)
         {
+            if (!_caterMoves) return;
+
             this.Dispatcher.Invoke(() =>
             {
                 CaterIsMovingView();
@@ -58,6 +61,8 @@ namespace CatersnakeApp
         /// <param name="e"></param>
         private void GameControl_LetHimGrow(object sender, EventArgs e)
         {
+            if (!_caterMoves) return;
+
             this.Dispatcher.Invoke(() =>
             {
                 GrowHeadView();
@@ -66,6 +71,11 @@ namespace CatersnakeApp
 
                 EatenTextBlock.Text = string.Format($"{(int.Parse(EatenTextBlock.Text)+1)}");
             });
+        }
+
+        private void GameControl_SelfEaten(object sender, EventArgs e)
+        {
+            _caterMoves = false;
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -99,6 +109,7 @@ namespace CatersnakeApp
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            _caterMoves = false;
             Dispatcher.BeginInvokeShutdown(System.Windows.Threading.DispatcherPriority.Send);
             Dispatcher.InvokeShutdown();
         }

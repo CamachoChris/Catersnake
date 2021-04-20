@@ -15,6 +15,7 @@ namespace CatersnakeModel
 
         public event EventHandler Tick;
         public event EventHandler LetHimGrow;
+        public event EventHandler SelfEaten;
 
         private Direction _direction = Direction.Left;
         private Direction _favoredDirection = Direction.Left;
@@ -40,23 +41,23 @@ namespace CatersnakeModel
             if (HasCaterApple())
             {
                 PlaceApple();
-
                 Cater.Grow(_direction);
-
                 if (LetHimGrow != null)
                     LetHimGrow(this, EventArgs.Empty);
-
             }
             else
             {
                 Cater.Move(_direction);
-
                 if (Tick != null)
                     Tick(this, EventArgs.Empty);
             }
 
             if (Cater.DidCollide())
+            {
                 Timer.Stop();
+                if (SelfEaten != null)
+                    SelfEaten(this, EventArgs.Empty);
+            }
         }
 
         public void StartTimer(int interval)
