@@ -8,7 +8,7 @@ namespace CatersnakeModel
 {
     class GameControl
     {
-        public Catersnake Cater;
+        public Catersnake Cater { get; private set; }
         public Point Apple = new Point();
 
         public Timer Timer = new Timer();

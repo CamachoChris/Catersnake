@@ -17,7 +17,7 @@ namespace CatersnakeModel
 
     public class Catersnake
     {
-        public List<Point> Limbs;
+        public List<Point> Limbs { get; private set; }
         private readonly int _maxFieldX, _maxFieldY;
 
         public Catersnake(int caterStartX, int caterStartY, int maxFieldX, int maxFieldY)
