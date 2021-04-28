@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Threading;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -40,7 +41,7 @@ namespace CatersnakeApp
         }
 
         /// <summary>
-        /// Using Dispatcher.Invoke
+        /// Using Dispatcher.BeginInvoke
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -48,14 +49,14 @@ namespace CatersnakeApp
         {
             if (!_caterMoves) return;
 
-            this.Dispatcher.Invoke(() =>
+            this.Dispatcher.BeginInvoke((Action)(() =>
             {
                 CaterIsMovingView();
-            });
+            }));
         }
 
         /// <summary>
-        /// Using Dispatcher.Invoke
+        /// Using Dispatcher.BeginInvoke
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -63,14 +64,13 @@ namespace CatersnakeApp
         {
             if (!_caterMoves) return;
 
-            this.Dispatcher.Invoke(() =>
+            this.Dispatcher.BeginInvoke((Action)(() =>
             {
                 GrowHeadView();
                 CaterIsMovingView();
                 PositionAppleView();
-
-                EatenTextBlock.Text = string.Format($"{(int.Parse(EatenTextBlock.Text)+1)}");
-            });
+                EatenTextBlock.Text = string.Format($"{(int.Parse(EatenTextBlock.Text) + 1)}");
+            }));
         }
 
         private void GameControl_SelfEaten(object sender, EventArgs e)
@@ -111,7 +111,6 @@ namespace CatersnakeApp
         {
             _caterMoves = false;
             Dispatcher.BeginInvokeShutdown(System.Windows.Threading.DispatcherPriority.Send);
-            Dispatcher.InvokeShutdown();
         }
 
         private void Window_Closed(object sender, EventArgs e)

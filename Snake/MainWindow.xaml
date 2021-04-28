@@ -26,7 +26,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel>
                 <Label Content="Fast" HorizontalAlignment="Center" Foreground="BurlyWood" Margin="0,100,0,0"/>
-                <Slider Orientation="Vertical" x:Name="slider" IsDirectionReversed="True" Focusable="False" Minimum="20" Maximum="400" Value="150" HorizontalAlignment="Center" VerticalAlignment="Center" Height="300"/>
+                <Slider Orientation="Vertical" x:Name="slider" IsDirectionReversed="True" Focusable="False" Minimum="25" Maximum="400" Value="150" HorizontalAlignment="Center" VerticalAlignment="Center" Height="300"/>
                 <Label Content="Slow" HorizontalAlignment="Center" Foreground="BurlyWood"/>
 
             </StackPanel>
